@@ -6,6 +6,12 @@ class Env:
         PORT = 'COM7'
         BaudRate = 115200
         self.ARD = serial.Serial(PORT,BaudRate)
+        self.clip_distance = 200. # unit: cm 
+        self.dead_distance = 8.  
+        self.safety_distance = 20.
+        
+        self.min_action = 125.
+        self.max_action = 250.
 
     def Decode(self, A):
         A = str(A.decode())
@@ -26,31 +32,32 @@ class Env:
             while self.ARD.readable():
                 LINE = self.ARD.readline()
                 data = self.Decode(LINE)
+                #data range: (0. ~ 999.)  >> clip(0. ~ 200.) >> (0. ~ 1.)
+                data = np.clip(data, 0., self.clip_distance) / self.clip_distance
                 return data
             else: 
                 print("읽기 실패 from _Ardread_")
 
 
     def step(self, action):
-        reward = 0
         done = False
         action_left, action_right = self.map_action(action)
-        Trans="S" + action_left + action_right # S+000+000
+        Trans="S" + action_left + action_right  #S+000+000
         Trans= Trans.encode('utf-8')
         self.ARD.write(Trans)
         
         data = self.Ardread()
 
-        if data[0] < 10:
+        if min(data) < (self.dead_distance/self.clip_distance):
             done = True
             reward = -10
-            return data, reward, done
         
-        elif 10 <= min(data) < 20:
-            reward += -1
+        elif (self.dead_distance/self.clip_distance) <= min(data) < (self.safety_distance/self.clip_distance):
+            reward = 1
 
-        elif min(data) >= 20:
-            reward += 1
+        elif min(data) >= (self.safety_distance/self.clip_distance):
+            reward = 2
+
         return data, reward, done
 
     def restart(self):
@@ -63,17 +70,12 @@ class Env:
         Trans= Trans.encode('utf-8')
         self.ARD.write(Trans)
 
-    def map_action(self, action, minimum = 100):
-        # action (0.0 ~ +1.0)  --> (130 ~ 250)
-        # action (-1.0 ~ 0.0)  --> (-130 ~ -250)
+    def map_action(self, action):
         action = np.reshape(action, (2,))
-        maximum = 250 - minimum
-        action = np.clip(action*maximum, -maximum, +maximum)
-        for i in range(2):
-            if action[i] < 0:
-                action[i] -= minimum
-            elif action[i] > 0:
-                action[i] += minimum
+        
+        action = (action + 1.)
+        action = action * (self.min_action / (self.max_action / self.min_action)) + self.min_action
+        
         action_left = "{:+03.0f}".format(action[0])
         action_right = "{:+03.0f}".format(action[1])
         return action_left, action_right
