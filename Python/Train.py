@@ -4,6 +4,7 @@ from Environment import Env
 import gym
 import numpy as np
 from Rule import Rule
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     env = Env()

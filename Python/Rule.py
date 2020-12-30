@@ -2,9 +2,9 @@ import gym
 
 class Rule:
     def __init__(self):
-        self.n_episode = 10
+        self.n_episode = 20
         self.save_cycle = 1
-        self.load = False
+        self.load = True
         
         self.env_name = 'RL_Car'
 

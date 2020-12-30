@@ -41,7 +41,7 @@ class Env:
         
         data = self.Ardread()
 
-        if data[0] < 10:
+        if min(data) < 10:
             done = True
             reward = -10
             return data, reward, done
@@ -63,17 +63,12 @@ class Env:
         Trans= Trans.encode('utf-8')
         self.ARD.write(Trans)
 
-    def map_action(self, action, minimum = 100):
-        # action (0.0 ~ +1.0)  --> (130 ~ 250)
-        # action (-1.0 ~ 0.0)  --> (-130 ~ -250)
+    def map_action(self, action):
+        # action (-1.0 ~ +1.0)  --> (125 ~ 250)
         action = np.reshape(action, (2,))
-        maximum = 250 - minimum
-        action = np.clip(action*maximum, -maximum, +maximum)
-        for i in range(2):
-            if action[i] < 0:
-                action[i] -= minimum
-            elif action[i] > 0:
-                action[i] += minimum
+        action = (action+1)*125/2 +125
+        action = np.clip(action, 125., 250.)
         action_left = "{:+03.0f}".format(action[0])
         action_right = "{:+03.0f}".format(action[1])
+        print(action_left + action_right)
         return action_left, action_right
