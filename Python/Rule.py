@@ -4,7 +4,7 @@ class Rule:
     def __init__(self):
         self.n_episode = 20
         self.save_cycle = 1
-        self.load = True
+        self.load = False
         
         self.env_name = 'RL_Car'
 
