@@ -10,7 +10,7 @@ Arduino car learn from real environment as an agent.
     * Ultrasonic Sensor * 3  
     * Servo Moter * 4  
     * Arduino Motor Driver  
-    * Bluetooth Module (for connecting with PC)  
+    * Bluetooth Module (To connect to PC)  
   
   * Python (Brain)  
     * pytorch  
