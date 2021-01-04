@@ -23,3 +23,6 @@ Arduino car learn from real environment as an agent.
   DQN Algorithm works good. but it can work only discrete action space.  
 #### DDPG Algorithm (for continuous action space)  
   DDPG is slower then DQN, but it can make agent do soft action!
+
+## To do
+* implementation PPO Algorithm (Discrete, continuous)
