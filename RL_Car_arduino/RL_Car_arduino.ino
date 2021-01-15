@@ -50,19 +50,17 @@ pinMode(trgL,OUTPUT);
 
 //Initializing.
 initialize();
-
 }
 
 void loop() {
-// Sense Distance
 Sensing();
-// Send to PC  
+delay(20);
 send_data();
-delay(80);
-
+delay(20);
 read_data();
-
-choose_action();
+delay(20);
+//choose_action();
+delay(20);
 }
 
 
@@ -188,12 +186,10 @@ void read_data(){
   }
   else if (check[0] == 'R')
   {
-    back();
-    delay(500);
-    turn();
-    delay(2000);
-    initialize();
+    ingame = false;
+    restart();
     sig = "";
+    
   }
   else if (check[0] == 'E')
   {
@@ -233,4 +229,12 @@ void choose_action()
     digitalWrite(LF,LOW);
     digitalWrite(LB,LOW);
   }
+}
+
+void restart(){
+  //back();
+  //delay(500);
+  //turn();
+  //delay(1500);
+  initialize();
 }

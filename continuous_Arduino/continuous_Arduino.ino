@@ -20,8 +20,6 @@ long dst_F;
 long dst_L;
 long dst_R;
 
-int Cspeed = 160;
-
 char data_F[20];
 
 char data_L[20];
@@ -59,11 +57,12 @@ initialize();
 void loop() {
 // Sense Distance
 Sensing();
-delay(100);
+delay(30);
 // Send to PC  
 send_data();
-
+delay(30);
 read_data();
+delay(30);
 choose_action();
 }
 
@@ -126,8 +125,8 @@ void back(){
   digitalWrite(LF,LOW);
   digitalWrite(LB,HIGH);
 
-  analogWrite(L_motor,Cspeed);
-  analogWrite(R_motor,Cspeed);
+  analogWrite(L_motor,160);
+  analogWrite(R_motor,160);
   
 }
 void turn()
@@ -136,8 +135,8 @@ void turn()
   digitalWrite(RB,HIGH);
   digitalWrite(LF,HIGH);
   digitalWrite(LB,LOW);
-  analogWrite(L_motor,Cspeed);
-  analogWrite(R_motor,Cspeed);
+  analogWrite(L_motor,160);
+  analogWrite(R_motor,160);
 }
 
 void read_data(){
@@ -158,11 +157,11 @@ void read_data(){
   }
   else if (check[0] == 'R')
   {
+    //Serial.print("RESTART");
     back();
     delay(500);
     turn();
-    delay(1500);
-    initialize();
+    delay(1400);
     sig = "";
   }
   else if (check[0] == 'E')
