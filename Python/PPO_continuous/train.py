@@ -10,16 +10,16 @@ n_episode = 20
 save_cycle = 1
 load = False
 #Hyperparameters for Training
-lr = 1e-3 #2.5e-5
-gamma = 0.9
-lmbda = 0.9
-epsilon = 0.1
+lr = 1e-4 #2.5e-5
+gamma = 0.99
+lmbda = 0.95
+epsilon = 0.2
 #Hyperparameters for Environment
 state_dim = 3
 action_dim = 2
 #Hyperparameters for buffer
 buffer_size = 1000
-batch_size = 256
+batch_size = 512
 k_epochs = 10
 
 if __name__ == '__main__':
@@ -33,7 +33,8 @@ if __name__ == '__main__':
         obs = env.Ardread()
         while not done:
             action, log_prob = agent.get_action(obs)
-            obs_,reward,done = env.step(action, repeat = 3)
+            obs_,reward,done = env.step(action)
+            print(obs_, action)
             score += reward
             agent.store(obs,action,log_prob,reward,obs_,done)
             obs = obs_
